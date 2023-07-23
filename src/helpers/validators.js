@@ -58,48 +58,48 @@ const isBlueCircle = compose(isBlue, isCircle); // функция, возвра�
 
 
 
-const length = (arr) => arr.length;
-const filter = (fn) => (arr) => arr.filter(fn);
-const values = (obj) => Object.values(obj);
-const isTwoGreen = compose(equals(2), length, filter(isGreen), values);
-const isTwoOther = compose(equals(2), length, filter(complement(isGreen)), values);
-const isTwoRed = compose(equals(2), length, filter(isRed), values);
-const isTwoBlue = compose(equals(2), length, filter(isBlue), values);
+const length = (arr) => arr.length; // функция, возвращающая длину массива
+const filter = (fn) => (arr) => arr.filter(fn); // функция, возвращающая отфильтрованный массив, состоящий из элементов, для которых fn вернула true
+const values = (obj) => Object.values(obj); // функция, возвращающая массив значений объекта
+const isTwoGreen = compose(equals(2), length, filter(isGreen), values); // функция, возвращающая true, если в массиве есть 2 зеленых фигуры
+const isTwoOther = compose(equals(2), length, filter(complement(isGreen)), values); // функция, возвращающая true, если в массиве есть 2 фигуры любого цвета, кроме зеленого
+const isTwoRed = compose(equals(2), length, filter(isRed), values); // функция, возвращающая true, если в массиве есть 2 красных фигуры
+const isTwoBlue = compose(equals(2), length, filter(isBlue), values); // функция, возвращающая true, если в массиве есть 2 синих фигуры
 
 
-const colorCheckFn = (color) => (figure) => figure.color === color;
+const colorCheckFn = (color) => (figure) => figure.color === color; // функция, возвращающая true, если цвет фигуры равен color
 
-const isThreeOfColor = (colorCheckFn) => compose(
+const isThreeOfColor = (colorCheckFn) => compose( // функция, возвращающая true, если в массиве есть 3 фигуры цвета color
   equals(3),
   length,
   filter(colorCheckFn),
   values
 );
 
-const isFourOfColor = (colorCheckFn) => compose(
+const isFourOfColor = (colorCheckFn) => compose( // функция, возвращающая true, если в массиве есть 4 фигуры цвета color
   equals(4),
   length,
   filter(colorCheckFn),
   values
 );
 
-const isOneRed = compose(equals(1), length, filter(isRed), values);
-const isThreeRed = isThreeOfColor(isRed);
-const isThreeGreen = isThreeOfColor(isGreen);
-const isThreeBlue = isThreeOfColor(isBlue);
-const isThreeOrange = isThreeOfColor(isOrange);
+const isOneRed = compose(equals(1), length, filter(isRed), values); // функция, возвращающая true, если в массиве есть 1 красная фигура
+const isThreeRed = isThreeOfColor(isRed); // функция, возвращающая true, если в массиве есть 3 красные фигуры
+const isThreeGreen = isThreeOfColor(isGreen); // функция, возвращающая true, если в массиве есть 3 зеленые фигуры
+const isThreeBlue = isThreeOfColor(isBlue); // функция, возвращающая true, если в массиве есть 3 синие фигуры
+const isThreeOrange = isThreeOfColor(isOrange); // функция, возвращающая true, если в массиве есть 3 оранжевые фигуры
 
-const isFourRed = isFourOfColor(isRed);
-const isFourGreen = isFourOfColor(isGreen);
-const isFourBlue = isFourOfColor(isBlue);
-const isFourOrange = isFourOfColor(isOrange);
+const isFourRed = isFourOfColor(isRed); // функция, возвращающая true, если в массиве есть 4 красные фигуры
+const isFourGreen = isFourOfColor(isGreen); // функция, возвращающая true, если в массиве есть 4 зеленые фигуры
+const isFourBlue = isFourOfColor(isBlue); // функция, возвращающая true, если в массиве есть 4 синие фигуры
+const isFourOrange = isFourOfColor(isOrange); // функция, возвращающая true, если в массиве есть 4 оранжевые фигуры
 
-const isNotRedStar = complement(isRedStar);
-const isNotWhiteStar = complement(isWhiteStar);
+const isNotRedStar = complement(isRedStar); // функция, возвращающая true, если цвет фигуры не red и тип star
+const isNotWhiteStar = complement(isWhiteStar); // функция, возвращающая true, если цвет фигуры не white и тип star
 
-const isNotWhiteSquare = complement(isWhiteSquare);
-const isNotWhiteTriangle = complement(isWhiteTriangle);
-const squareEqualsTriangle = ({square, triangle}) => square === triangle;
+const isNotWhiteSquare = complement(isWhiteSquare); // функция, возвращающая true, если цвет фигуры не white и тип square
+const isNotWhiteTriangle = complement(isWhiteTriangle); // функция, возвращающая true, если цвет фигуры не white и тип triangle
+const squareEqualsTriangle = ({square, triangle}) => square === triangle; // функция, возвращающая true, если квадрат равно треугольник
 
 // 1. Красная звезда, зеленый квадрат, все остальные белые.
 
@@ -121,8 +121,6 @@ export const validateFieldN5 = anyPass([
   isThreeRed, isThreeGreen, isThreeBlue, isThreeOrange,
   isFourRed, isFourGreen, isFourBlue, isFourOrange
 ]);
-
-
 
 // 6. Ровно две зеленые фигуры (одна из зелёных – это треугольник), плюс одна красная. Четвёртая оставшаяся любого доступного цвета, но не нарушающая первые два условия
 export const validateFieldN6 = allPass([isGreenTriangle, isTwoGreen, isOneRed])
