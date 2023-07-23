@@ -1,3 +1,4 @@
+import {allPass, complement, compose, equals, prop, propEq} from 'ramda';
 /**
  * @file Домашка по FP ч. 1
  *
@@ -13,17 +14,65 @@
  * Если какие либо функции написаны руками (без использования библиотек) это не является ошибкой
  */
 
-// 1. Красная звезда, зеленый квадрат, все остальные белые.
-export const validateFieldN1 = ({star, square, triangle, circle}) => {
-    if (triangle !== 'white' || circle !== 'white') {
-        return false;
-    }
+// Функции для сравнения типов фигур
 
-    return star === 'red' && square === 'green';
-};
+const isStar = prop('star'); // функция, возвращающая значение поля star
+const isTriangle = prop('triangle'); // функция, возвращающая значение поля triangle
+const isSquare = prop('square'); // функция, возвращающая значение поля square
+const isCircle = prop('circle'); // функция, возвращающая значение поля circle
+
+// Функции для сравнения цветов фигур
+
+const isRed = equals('red'); // функция, возвращающая true, если цвет фигуры red
+const isWhite = equals('white'); // функция, возвращающая true, если цвет фигуры white
+const isGreen = equals('green'); // функция, возвращающая true, если цвет фигуры green
+const isOrange = equals('orange'); // функция, возвращающая true, если цвет фигуры orange
+const isBlue = equals('blue'); // функция, возвращающая true, если цвет фигуры blue
+
+
+// Функции для сравнения цветов фигур
+
+const isRedStar = compose(isRed, isStar); // функция, возвращающая true, если цвет фигуры red и тип star
+const isWhiteStar = compose(isWhite, isStar); // функция, возвращающая true, если цвет фигуры white и тип star
+const isGreenStar = compose(isGreen, isStar); // функция, возвращающая true, если цвет фигуры green и тип star
+const isOrangeStar = compose(isOrange, isStar); // функция, возвращающая true, если цвет фигуры orange и тип star
+const isBlueStar = compose(isBlue, isStar); // функция, возвращающая true, если цвет фигуры blue и тип star
+
+const isRedTriangle = compose(isRed, isTriangle); // функция, возвращающая true, если цвет фигуры red и тип triangle
+const isWhiteTriangle = compose(isWhite, isTriangle); // функция, возвращающая true, если цвет фигуры white и тип triangle
+const isGreenTriangle = compose(isGreen, isTriangle); // функция, возвращающая true, если цвет фигуры green и тип triangle
+const isOrangeTriangle = compose(isOrange, isTriangle); // функция, возвращающая true, если цвет фигуры orange и тип triangle
+const isBlueTriangle = compose(isBlue, isTriangle); // функция, возвращающая true, если цвет фигуры blue и тип triangle
+
+const isRedSquare = compose(isRed, isSquare); // функция, возвращающая true, если цвет фигуры red и тип square
+const isWhiteSquare = compose(isWhite, isSquare); // функция, возвращающая true, если цвет фигуры white и тип square
+const isGreenSquare = compose(isGreen, isSquare); // функция, возвращающая true, если цвет фигуры green и тип square
+const isOrangeSquare = compose(isOrange, isSquare); // функция, возвращающая true, если цвет фигуры orange и тип square
+const isBlueSquare = compose(isBlue, isSquare); // функция, возвращающая true, если цвет фигуры blue и тип square
+
+const isRedCircle = compose(isRed, isCircle); // функция, возвращающая true, если цвет фигуры red и тип circle
+const isWhiteCircle = compose(isWhite, isCircle); // функция, возвращающая true, если цвет фигуры white и тип circle
+const isGreenCircle = compose(isGreen, isCircle); // функция, возвращающая true, если цвет фигуры green и тип circle
+const isOrangeCircle = compose(isOrange, isCircle); // функция, возвращающая true, если цвет фигуры orange и тип circle
+const isBlueCircle = compose(isBlue, isCircle); // функция, возвращающая true, если цвет фигуры blue и тип circle
+
+
+
+// 1. Красная звезда, зеленый квадрат, все остальные белые.
+
+export const validateFieldN1 = allPass([isRedStar, isGreenSquare, isWhiteTriangle, isWhiteCircle]);
 
 // 2. Как минимум две фигуры зеленые.
-export const validateFieldN2 = () => false;
+
+const length = (arr) => arr.length;
+const filter = (fn) => (arr) => arr.filter(fn);
+const values = (obj) => Object.values(obj);
+const isTwoGreen = compose(equals(2), length, filter(isGreen), values);
+const isTwoOther = compose(equals(2), length, filter(complement(isGreen)), values);
+
+
+
+export const validateFieldN2 = allPass([isTwoGreen, isTwoOther]);
 
 // 3. Количество красных фигур равно кол-ву синих.
 export const validateFieldN3 = () => false;
