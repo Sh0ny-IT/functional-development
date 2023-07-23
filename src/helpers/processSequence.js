@@ -1,5 +1,5 @@
 import Api from '../tools/api';
-import {__, andThen, gt, lt, pipe, compose, prop, assoc} from 'ramda';
+import {__, andThen, gt, lt, pipe, compose, prop, assoc, test} from 'ramda';
 
 const api = new Api();
 
@@ -8,13 +8,12 @@ const gtTwo = gt(__, 2);
 const ltTen = lt(__, 10);
 const positiveNumber = num => Number(num) > 0;
 
-const RegExpNumber = /^[0-9]*\.?[0-9]+$/;
-const testOnlyNumbers = value => RegExpNumber.test(value);
+const RegExpNumber = test(/^[0-9]+\.?[0-9]+$/);
 
 const validate = value => (
   gtTwo(value.length) &&
   ltTen(value.length) &&
-  testOnlyNumbers(value) &&
+  RegExpNumber(value) &&
   positiveNumber(value)
 );
 
@@ -28,6 +27,8 @@ const apiGetNumberBinaryBase = compose(
   api.get(API_NUMBERS_URL),
   assocNumberToBinary
 );
+
+
 
 const processSequence = ({ value, writeLog, handleSuccess, handleError }) => {
   writeLog(value);
