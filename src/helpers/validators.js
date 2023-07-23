@@ -1,4 +1,4 @@
-import {allPass, complement, compose, equals, prop, propEq} from 'ramda';
+import {allPass, anyPass, complement, compose, equals, prop, propEq} from 'ramda';
 /**
  * @file Домашка по FP ч. 1
  *
@@ -58,42 +58,85 @@ const isBlueCircle = compose(isBlue, isCircle); // функция, возвра�
 
 
 
+const length = (arr) => arr.length;
+const filter = (fn) => (arr) => arr.filter(fn);
+const values = (obj) => Object.values(obj);
+const isTwoGreen = compose(equals(2), length, filter(isGreen), values);
+const isTwoOther = compose(equals(2), length, filter(complement(isGreen)), values);
+const isTwoRed = compose(equals(2), length, filter(isRed), values);
+const isTwoBlue = compose(equals(2), length, filter(isBlue), values);
+
+
+const colorCheckFn = (color) => (figure) => figure.color === color;
+
+const isThreeOfColor = (colorCheckFn) => compose(
+  equals(3),
+  length,
+  filter(colorCheckFn),
+  values
+);
+
+const isFourOfColor = (colorCheckFn) => compose(
+  equals(4),
+  length,
+  filter(colorCheckFn),
+  values
+);
+
+const isOneRed = compose(equals(1), length, filter(isRed), values);
+const isThreeRed = isThreeOfColor(isRed);
+const isThreeGreen = isThreeOfColor(isGreen);
+const isThreeBlue = isThreeOfColor(isBlue);
+const isThreeOrange = isThreeOfColor(isOrange);
+
+const isFourRed = isFourOfColor(isRed);
+const isFourGreen = isFourOfColor(isGreen);
+const isFourBlue = isFourOfColor(isBlue);
+const isFourOrange = isFourOfColor(isOrange);
+
+const isNotRedStar = complement(isRedStar);
+const isNotWhiteStar = complement(isWhiteStar);
+
+const isNotWhiteSquare = complement(isWhiteSquare);
+const isNotWhiteTriangle = complement(isWhiteTriangle);
+const squareEqualsTriangle = ({square, triangle}) => square === triangle;
+
 // 1. Красная звезда, зеленый квадрат, все остальные белые.
 
 export const validateFieldN1 = allPass([isRedStar, isGreenSquare, isWhiteTriangle, isWhiteCircle]);
 
 // 2. Как минимум две фигуры зеленые.
 
-const length = (arr) => arr.length;
-const filter = (fn) => (arr) => arr.filter(fn);
-const values = (obj) => Object.values(obj);
-const isTwoGreen = compose(equals(2), length, filter(isGreen), values);
-const isTwoOther = compose(equals(2), length, filter(complement(isGreen)), values);
-
-
 
 export const validateFieldN2 = allPass([isTwoGreen, isTwoOther]);
 
 // 3. Количество красных фигур равно кол-ву синих.
-export const validateFieldN3 = () => false;
+export const validateFieldN3 = allPass([isTwoRed, isTwoBlue])
 
 // 4. Синий круг, красная звезда, оранжевый квадрат треугольник любого цвета
-export const validateFieldN4 = () => false;
+export const validateFieldN4 = allPass([isBlueCircle, isRedStar, isOrangeSquare, isTriangle])
 
 // 5. Три фигуры одного любого цвета кроме белого (четыре фигуры одного цвета – это тоже true).
-export const validateFieldN5 = () => false;
+export const validateFieldN5 = anyPass([
+  isThreeRed, isThreeGreen, isThreeBlue, isThreeOrange,
+  isFourRed, isFourGreen, isFourBlue, isFourOrange
+]);
+
+
 
 // 6. Ровно две зеленые фигуры (одна из зелёных – это треугольник), плюс одна красная. Четвёртая оставшаяся любого доступного цвета, но не нарушающая первые два условия
-export const validateFieldN6 = () => false;
+export const validateFieldN6 = allPass([isGreenTriangle, isTwoGreen, isOneRed])
 
 // 7. Все фигуры оранжевые.
-export const validateFieldN7 = () => false;
+export const validateFieldN7 = allPass([isOrangeCircle, isOrangeSquare, isOrangeTriangle, isOrangeStar])
 
 // 8. Не красная и не белая звезда, остальные – любого цвета.
-export const validateFieldN8 = () => false;
+export const validateFieldN8 = allPass([isNotRedStar, isNotWhiteStar])
 
 // 9. Все фигуры зеленые.
-export const validateFieldN9 = () => false;
+export const validateFieldN9 = allPass([isGreenStar, isGreenCircle, isGreenSquare, isGreenTriangle])
+
 
 // 10. Треугольник и квадрат одного цвета (не белого), остальные – любого цвета
-export const validateFieldN10 = () => false;
+export const validateFieldN10 = allPass([isNotWhiteSquare, isNotWhiteTriangle, squareEqualsTriangle])
+
