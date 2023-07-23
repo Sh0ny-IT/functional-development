@@ -10,6 +10,7 @@ const positiveNumber = num => Number(num) > 0;
 
 const RegExpNumber = test(/^[0-9]+\.?[0-9]+$/);
 
+
 const validate = value => (
   gtTwo(value.length) &&
   ltTen(value.length) &&
